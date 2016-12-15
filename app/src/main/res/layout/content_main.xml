@@ -19,6 +19,9 @@
         android:layout_height="wrap_content"
         android:text="Hello World!" />
     <TextView
-        android:layout_width=""
-        android:layout_height="" />
+        android:id="@+id/box"
+        android:layout_centerInParent="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        />
 </RelativeLayout>

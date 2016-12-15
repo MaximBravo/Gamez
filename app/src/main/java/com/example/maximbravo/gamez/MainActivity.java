@@ -1,6 +1,8 @@
 package com.example.maximbravo.gamez;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,11 +16,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    private RecognizeTouchEvent screen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        screen = new RecognizeTouchEvent(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         View main = findViewById(R.id.content_main);
+        TextView box = (TextView) findViewById(R.id.box);
         TextView t = (TextView) findViewById(R.id.test_textview);
         if(event.getAction() == android.view.MotionEvent.ACTION_UP){
             t.setText("Recording stoped.");
@@ -43,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
             int y = (int) event.getY();
             t.setText("Recording: x:" + x + ", y:" + y);
             int mainX = (int) main.getX();
-            if (x <= mainX) {
-                main.setBackgroundColor(Color.RED);
+            if (screen.isOnView(x, y, main.getY())) {
+                t.setText("Yes!!!");
+                box.setBackgroundColor(Color.RED);
+                //main.setBackgroundColor(Color.RED);
             }
         }
         return super.onTouchEvent(event);
