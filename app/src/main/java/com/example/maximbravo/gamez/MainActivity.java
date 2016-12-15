@@ -38,19 +38,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         View main = findViewById(R.id.content_main);
-        TextView box = (TextView) findViewById(R.id.box);
+        //TextView box = (TextView) findViewById(R.id.box);
         TextView t = (TextView) findViewById(R.id.test_textview);
         if(event.getAction() == android.view.MotionEvent.ACTION_UP){
             t.setText("Recording stoped.");
         } else {
             int x = (int) event.getX();
             int y = (int) event.getY();
-            t.setText("Recording: x:" + x + ", y:" + y);
+            //t.setText("Recording: x:" + x + ", y:" + y);
             int mainX = (int) main.getX();
-            if (screen.isOnView(x, y, main.getY())) {
-                t.setText("Yes!!!");
-                box.setBackgroundColor(Color.RED);
+            String viewTouching = screen.isOnView(x, y, main.getY());
+            if (viewTouching.equals("")) {
+                t.setText("You are touching: No View");
+                //box.setBackgroundColor(Color.RED);
                 //main.setBackgroundColor(Color.RED);
+            } else {
+                t.setText("You are touching: " + viewTouching);
             }
         }
         return super.onTouchEvent(event);
