@@ -26,19 +26,23 @@ public class RecognizeTouchEvent {
     private int boardWidth;
     private int boardHeight;
     private Activity mainActivity;
-    public RecognizeTouchEvent(Activity activity, int width, int height){
+    private int widthOfCell;
+
+    public RecognizeTouchEvent(Activity activity, int width, int height, int cellWidth){
         mainActivity = activity;
         main = (ViewGroup) mainActivity.findViewById(R.id.content_main);
         boardWidth = width;
         boardHeight = height;
+        widthOfCell = cellWidth;
         makeBoard();
-
     }
-    private final int fraction = 20;
+    private static final int fraction = 20;
     public void makeBoard(){
 
         final float scale = mainActivity.getApplicationContext().getResources().getDisplayMetrics().density;
-        int pixels = (int) (50 * scale + 0.5f);
+        int pixels = (int) (widthOfCell * scale + 0.5f);
+        int margin = pixels/fraction;
+        //int pixels = widthOfCell;
         LinearLayout boardLinear = new LinearLayout(mainActivity.getApplicationContext());
         boardLinear.setOrientation(LinearLayout.VERTICAL);
         for(int rows = 0; rows < boardWidth; rows++) {
@@ -49,7 +53,7 @@ public class RecognizeTouchEvent {
                 right.setHeight(pixels);
                 right.setWidth(pixels);
                 LinearLayout.LayoutParams templ = new LinearLayout.LayoutParams(pixels, pixels);
-                templ.setMargins(pixels/fraction,pixels/fraction,pixels/fraction,pixels/fraction);
+                templ.setMargins(margin, margin, margin, margin);
                 right.setLayoutParams(templ);
                 right.setId(View.generateViewId());
                 right.setBackgroundColor(Color.RED);
@@ -60,8 +64,9 @@ public class RecognizeTouchEvent {
             boardLinear.addView(l);
 
         }
-        double multiplier = 8.0/fraction;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)((pixels*boardWidth) + (pixels * (multiplier))),(int) ((pixels*boardWidth) + (pixels * (multiplier))));
+
+        double paddingspacewidth = margin * (boardWidth * 2);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)((pixels*boardWidth) + paddingspacewidth),(int) ((pixels*boardWidth) + paddingspacewidth));
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         boardLinear.setLayoutParams(params);
         boardLinear.setId(View.generateViewId());
