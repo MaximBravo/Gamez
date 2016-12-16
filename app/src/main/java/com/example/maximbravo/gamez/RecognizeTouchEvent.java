@@ -45,6 +45,7 @@ public class RecognizeTouchEvent {
         //int pixels = widthOfCell;
         LinearLayout boardLinear = new LinearLayout(mainActivity.getApplicationContext());
         boardLinear.setOrientation(LinearLayout.VERTICAL);
+        int count = 1;
         for(int rows = 0; rows < boardWidth; rows++) {
             LinearLayout l = new LinearLayout(mainActivity.getApplicationContext());
             l.setOrientation(LinearLayout.HORIZONTAL);
@@ -55,9 +56,10 @@ public class RecognizeTouchEvent {
                 LinearLayout.LayoutParams templ = new LinearLayout.LayoutParams(pixels, pixels);
                 templ.setMargins(margin, margin, margin, margin);
                 right.setLayoutParams(templ);
-                right.setId(View.generateViewId());
-                right.setBackgroundColor(Color.RED);
+                right.setId(count);
+                right.setBackgroundColor(mainActivity.getResources().getColor(R.color.boardGreen));
                 l.addView(right);
+                count++;
             }
 
             //l.setLayoutParams(params);
@@ -69,7 +71,8 @@ public class RecognizeTouchEvent {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)((pixels*boardWidth) + paddingspacewidth),(int) ((pixels*boardWidth) + paddingspacewidth));
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         boardLinear.setLayoutParams(params);
-        boardLinear.setId(View.generateViewId());
+        boardLinear.setId(count);
+        boardLinear.setBackgroundColor(mainActivity.getResources().getColor(R.color.boardBlack));
         main.addView(boardLinear);
 
 

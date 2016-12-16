@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private RecognizeTouchEvent screen;
-    private final int boardSize = 2;
+    private final int boardSize = 8;
     private int cellSize;
     private View main;
     @Override
@@ -37,12 +37,17 @@ public class MainActivity extends AppCompatActivity {
         int width = displaymetrics.widthPixels;
         int smallest = pxToDp(Math.min(height, width));
         screen = new RecognizeTouchEvent(this, boardSize, boardSize, smallest/(boardSize+2)-4);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                int resId = 1;
+                TextView testing = (TextView) findViewById(resId);
+                testing.setBackgroundColor(getResources().getColor(R.color.boardGreen));
+
             }
         });
 
