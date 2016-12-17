@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private BoardMaker screen;
-    private final int boardSize = 8;
+    private final int boardSize = 10;
     private int cellSize;
     private View main;
     @Override
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             int mainX = (int) main.getX();
             String viewTouching = screen.isOnView(x, y, main.getY());
             if (viewTouching.equals("")) {
-                t.setText("You are touching: No View");
+                t.setText("You are touching: No View"+ "\n Pointer X: " + x + "\n Pointer Y: " + y);
                 //box.setBackgroundColor(Color.RED);
                 //main.setBackgroundColor(Color.RED);
             } else {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 touched.add(Integer.parseInt(viewTouching));
 
-                t.setText("You are touching: " + viewTouching);
+                t.setText("You are touching: " + screen.getTempSummary() + "\n Pointer X: " + x + "\n Pointer Y: " + y);
             }
         }
         return super.onTouchEvent(event);
