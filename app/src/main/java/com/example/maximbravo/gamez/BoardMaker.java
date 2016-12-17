@@ -14,12 +14,13 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by Maxim Bravo on 12/15/2016.
  */
 
-public class RecognizeTouchEvent {
+public class BoardMaker {
     private int currentX;
     private int currentY;
     private ViewGroup main;
@@ -28,7 +29,7 @@ public class RecognizeTouchEvent {
     private Activity mainActivity;
     private int widthOfCell;
 
-    public RecognizeTouchEvent(Activity activity, int width, int height, int cellWidth){
+    public BoardMaker(Activity activity, int width, int height, int cellWidth){
         mainActivity = activity;
         main = (ViewGroup) mainActivity.findViewById(R.id.content_main);
         boardWidth = width;
@@ -37,6 +38,26 @@ public class RecognizeTouchEvent {
         makeBoard();
     }
     private static final int fraction = 20;
+
+    private static int[] colors = {
+            Color.parseColor("#f59b18"),
+            Color.parseColor("#804f63"),
+            Color.parseColor("#1650e0"),
+            Color.parseColor("#78d2e9"),
+            Color.parseColor("#ffaa6a"),
+            Color.parseColor("#567f14"),
+            Color.parseColor("#4c47c6"),
+            Color.parseColor("#364293"),
+            Color.parseColor("#938fd7"),
+            Color.parseColor("#fa15bd"),
+            Color.parseColor("#3a0bcd"),
+            Color.parseColor("#10d3ec"),
+            Color.parseColor("#bc44f9"),
+            Color.parseColor("#662a74"),
+            Color.parseColor("#67b1ac"),
+            Color.parseColor("#b6ef6e"),
+            Color.parseColor("#662a74")
+    };
     public void makeBoard(){
 
         final float scale = mainActivity.getApplicationContext().getResources().getDisplayMetrics().density;
@@ -57,7 +78,13 @@ public class RecognizeTouchEvent {
                 templ.setMargins(margin, margin, margin, margin);
                 right.setLayoutParams(templ);
                 right.setId(count);
-                right.setBackgroundColor(mainActivity.getResources().getColor(R.color.boardGreen));
+                Random rand = new Random();
+
+                // nextInt is normally exclusive of the top value,
+                // so add 1 to make it inclusive
+                int randomNum = rand.nextInt((15 - 1) + 1) + 1;
+
+                right.setBackgroundColor(colors[randomNum]);
                 l.addView(right);
                 count++;
             }
