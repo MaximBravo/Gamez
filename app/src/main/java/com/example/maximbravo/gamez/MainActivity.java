@@ -1,6 +1,10 @@
 package com.example.maximbravo.gamez;
 
+import android.content.ContentValues;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,11 +23,17 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.maximbravo.gamez.data.BoardContract.BoardEntry;
+import com.example.maximbravo.gamez.data.BoardDbHelper;
+
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
     private RecognizeTouchEvent screen;
     private final int boardSize = 8;
     private int cellSize;
     private View main;
+    private BoardDbHelper mDbHelper = new BoardDbHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         int width = displaymetrics.widthPixels;
         int smallest = pxToDp(Math.min(height, width));
         screen = new RecognizeTouchEvent(this, boardSize, boardSize, smallest/(boardSize+2)-4);
+        screen.loadRawBoard();
+        HashMap<Integer, Integer[]> rawBoardData = screen.getRawBoardData();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +63,42 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        putDataBaseInfo(rawBoardData);
+        displayDatabaseInfo();
+
+    }
+    private void displayDatabaseInfo() {
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + BoardEntry.TABLE_NAME, null);
+        try {
+            TextView displayView = (TextView) findViewById(R.id.test_textview);
+            displayView.setText("Number of rows in pets database table: " + cursor.getCount());
+        } finally {
+            cursor.close();
+        }
+    }
+    private void putDataBaseInfo(HashMap<Integer, Integer[]> boardData){
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        for(int i = 0; i < boardData.size(); i++){
+            Integer[] currentRow = boardData.get(i);
+            //idxywh
+            ContentValues values = new ContentValues();
+            values.put(BoardEntry.COLUMN_RES_ID, currentRow[0]);
+            values.put(BoardEntry.COLUMN_X_VALUE, currentRow[1]);
+            values.put(BoardEntry.COLUMN_Y_VALUE, currentRow[2]);
+            values.put(BoardEntry.COLUMN_WIDTH, currentRow[3]);
+            values.put(BoardEntry.COLUMN_HEIGHT, currentRow[4]);
+            values.put(BoardEntry.COLUMN_STATE, BoardEntry.STATE_EMPTY);
+
+            long newRowId = db.insert(BoardEntry.TABLE_NAME,
+                    null,
+                    values);
+            Log.v("OVERHEREOVERHERE", "New row ID " + newRowId);
+        }
 
     }
     public int pxToDp(int px) {
@@ -63,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         TextView t = (TextView) findViewById(R.id.test_textview);
         if(event.getAction() == android.view.MotionEvent.ACTION_UP){
             t.setText("Recording stoped.");
+            displayDatabaseInfo();
         } else {
             int x = (int) event.getX();
             int y = (int) event.getY();
@@ -71,10 +121,14 @@ public class MainActivity extends AppCompatActivity {
             String viewTouching = screen.isOnView(x, y, main.getY());
             if (viewTouching.equals("")) {
                 t.setText("You are touching: No View");
+                //displayDatabaseInfo();
                 //box.setBackgroundColor(Color.RED);
                 //main.setBackgroundColor(Color.RED);
             } else {
                 t.setText("You are touching: " + viewTouching);
+
+
+
             }
         }
         return super.onTouchEvent(event);

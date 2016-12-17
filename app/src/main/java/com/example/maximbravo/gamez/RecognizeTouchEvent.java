@@ -34,7 +34,9 @@ public class RecognizeTouchEvent {
         boardWidth = width;
         boardHeight = height;
         widthOfCell = cellWidth;
+        rawBoard = new HashMap<>();
         makeBoard();
+
     }
     private static final int fraction = 20;
     public void makeBoard(){
@@ -78,11 +80,13 @@ public class RecognizeTouchEvent {
 
 
     }
-    public String isOnView(int x, int y, float extraTop){
-        //TextView box = (TextView) mainActivity.findViewById(R.id.box);
-
+    private static HashMap<Integer, Integer[]> rawBoard;
+    public static HashMap<Integer, Integer[]> getRawBoardData(){
+        return rawBoard;
+    }
+    public void loadRawBoard(){
         LinearLayout board = (LinearLayout) main.getChildAt(1);
-        HashMap<Integer, Integer[]> views = new HashMap<>();
+
         int boardX = (int) board.getX();
         int boardY = (int) board.getY();
         int count = 0;
@@ -96,13 +100,18 @@ public class RecognizeTouchEvent {
                 int childX = boardX+(i * (row.getHeight() ));
                 int childY = boardY+(index * (row.getHeight()));
                 Integer[] idxywh = {id, childX, childY, row.getHeight(), row.getHeight()};
-                views.put(count, idxywh);
+                rawBoard.put(count, idxywh);
                 count++;
             }
         }
+    }
+    public String isOnView(int x, int y, float extraTop){
+        //TextView box = (TextView) mainActivity.findViewById(R.id.box);
 
-        for(int i = 0; i < views.size(); i++){
-            Integer[] metaData = views.get(i);
+
+
+        for(int i = 0; i < rawBoard.size(); i++){
+            Integer[] metaData = rawBoard.get(i);
             int id = metaData[0];
             int viewX = metaData[1];
             int viewY = metaData[2];
